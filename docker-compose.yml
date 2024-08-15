@@ -10,25 +10,20 @@ services:
       - "8000:8000"
     depends_on:
       - db
-    environment:
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=rootpassword
-      - DB_NAME=users
+    env_file:
+      - .env
 
   db:
     image: mysql:8.0
     container_name: db-services
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: users
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./data/raw.sql:/docker-entrypoint-initdb.d/1_raw.sql
       - ./data/preprocess.sql:/docker-entrypoint-initdb.d/2_preprocess.sql
+    env_file:
+      - .env
 
 volumes:
   db_data:
